@@ -5,10 +5,11 @@ app.get("/", (req, res) => {
   res.send("Backend Ruta 34 funcionando 🚀");
 });
 
-app.get("/noticias", (req, res) => {
-  res.json([
-    { titulo: "Prueba noticia Ruta 34" }
-  ]);
+const { obtenerNoticias } = require("./scraper");
+
+app.get("/noticias", async (req, res) => {
+  const noticias = await obtenerNoticias();
+  res.json(noticias);
 });
 
 const PORT = process.env.PORT || 3000;
