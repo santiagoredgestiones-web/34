@@ -1,3 +1,16 @@
+const express = require("express");
+const cors = require("cors");
+
+const app = express();
+
+app.use(cors()); // 👈 ESTO SOLUCIONA EL 403
+
+app.get("/clima", (req, res) => {
+  res.json([{ ciudad: "La Banda", estado: "normal" }]);
+});
+
+app.listen(3000, () => console.log("Servidor listo"));
+
 const { obtenerClima } = require("./clima");
 const express = require("express");
 const cors = require("cors");
