@@ -42,6 +42,25 @@ app.get("/accidentes", async (req, res) => {
     res.status(500).json({ error: "Error obteniendo accidentes" });
   }
 });
+app.get("/clima", async (req, res) => {
+  try {
+    const clima = await obtenerClima();
+    res.json(clima);
+  } catch (error) {
+    res.status(500).json({ error: "Error obteniendo clima" });
+  }
+});
+app.get("/alertas", async (req, res) => {
+  try {
+    const clima = await obtenerClima();
+
+    const alertas = clima.filter(c => c.alerta);
+
+    res.json(alertas);
+  } catch (error) {
+    res.status(500).json({ error: "Error obteniendo alertas" });
+  }
+});
 
 // puerto dinámico (IMPORTANTE para Render)
 const PORT = process.env.PORT || 3000;
