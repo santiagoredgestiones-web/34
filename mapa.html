@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Ruta 34 - Alertas</title>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+</head>
+
+<body>
+  <h2>🚗 Alertas Ruta 34</h2>
+  <div id="map" style="height: 500px;"></div>
+
+<script>
+  const map = L.map('map').setView([-28.0, -63.5], 7);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: 'Mapa'
+  }).addTo(map);
+
+  const ciudades = {
+    "La Banda": [-27.733, -64.242],
+    "Fernandez": [-27.920, -63.893],
+    "Colonia Dora": [-28.600, -62.950],
+    "Selva": [-29.767, -62.050]
+  };
+
+  fetch("https://three4-9ra9.onrender.com/clima")
+    .then(res => res.json())
+    .then(data => {
+
+      data.forEach(c => {
+        const coords = ciudades[c.ciudad];
+
+        if (!coords) return;
+
+        const color = c.alerta ? "red" : "green";
+
+        const marker = L.circleMarker(coords, {
+          color: color,
+          radius: 10
+        }).addTo(map);
+
+        marker.bindPopup(`
+          <b>${c.ciudad}</b><br>
+          Temp: ${c.temperatura}°C<br>
+          Estado: ${c.estado}<br>
+          ${c.alerta ? "🚨 ALERTA" : "OK"}
+        `);
+      });
+
+    });
+</script>
+
+</body>
+</html>
