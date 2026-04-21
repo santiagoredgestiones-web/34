@@ -1,3 +1,4 @@
+const { obtenerClima } = require("./clima");
 const express = require("express");
 const cors = require("cors");
 const { obtenerNoticias } = require("./scraper");
