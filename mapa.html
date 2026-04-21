@@ -1,37 +1,38 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Ruta 34 - Alertas</title>
+  <title>Ruta 34 - Mapa de Alertas</title>
   <meta charset="utf-8" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 </head>
 
 <body>
-  <h2>🚗 Alertas Ruta 34</h2>
+  <h2>🚗 Ruta 34 - Alertas y Accidentes</h2>
   <div id="map" style="height: 500px;"></div>
 
 <script>
-  const map = L.map('map').setView([-28.0, -63.5], 7);
+  const map = L.map('map').setView([-28.2, -63.5], 7);
 
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: 'Mapa'
-  }).addTo(map);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
   const ciudades = {
     "La Banda": [-27.733, -64.242],
     "Fernandez": [-27.920, -63.893],
     "Colonia Dora": [-28.600, -62.950],
-    "Selva": [-29.767, -62.050]
+    "Selva": [-29.767, -62.050],
+    "Beltran": [-27.833, -64.067],
+    "Forres": [-28.100, -64.233],
+    "Herrera": [-28.483, -64.050],
+    "Pinto": [-29.150, -62.833]
   };
 
+  // 🌦️ CLIMA
   fetch("https://three4-9ra9.onrender.com/clima")
     .then(res => res.json())
     .then(data => {
-
       data.forEach(c => {
         const coords = ciudades[c.ciudad];
-
         if (!coords) return;
 
         const color = c.alerta ? "red" : "green";
@@ -43,13 +44,43 @@
 
         marker.bindPopup(`
           <b>${c.ciudad}</b><br>
-          Temp: ${c.temperatura}°C<br>
-          Estado: ${c.estado}<br>
-          ${c.alerta ? "🚨 ALERTA" : "OK"}
+          🌡️ ${c.temperatura}°C<br>
+          🌦️ ${c.estado}<br>
+          ${c.alerta ? "🚨 ALERTA CLIMÁTICA" : "Clima normal"}
         `);
+      });
+    });
+
+  // 🚗 ACCIDENTES
+  fetch("https://three4-9ra9.onrender.com/accidentes")
+    .then(res => res.json())
+    .then(data => {
+
+      data.forEach(noticia => {
+        const texto = noticia.titulo.toLowerCase();
+
+        // detectar ciudad en el título
+        for (let ciudad in ciudades) {
+          if (texto.includes(ciudad.toLowerCase())) {
+
+            const coords = ciudades[ciudad];
+
+            const marker = L.marker(coords).addTo(map);
+
+            marker.bindPopup(`
+              ⚠️ <b>Accidente</b><br>
+              📍 ${ciudad}<br><br>
+              ${noticia.titulo}<br>
+              📰 ${noticia.fuente}
+            `);
+
+            break;
+          }
+        }
       });
 
     });
+
 </script>
 
 </body>
