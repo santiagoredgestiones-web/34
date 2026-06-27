@@ -1,1 +1,1 @@
- APP for advicing drivers who travel on argentine national route 34 about climate risk and for real-time hazards (accidents, police, potholes) .
+An app that alerts drivers traveling on Argentina's National Route 34 to severe weather conditions and real-time road hazards, including accidents, police checkpoints, and potholes.
